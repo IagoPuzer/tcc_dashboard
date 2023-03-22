@@ -1,0 +1,80 @@
+/*========= RESETS ======== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-size: 62.5%;
+    /* 10px = 1rem*/
+
+}
+body {
+    background-color: #F2F3F8;
+    font-family:Poppins;
+}
+
+/*========= MAIN ======== */
+
+.main {
+    width: 100%;
+    height: max-content;
+}
+
+/*========= TITLE ======== */
+
+.title{
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/*========= MAIN SECTION ======== */
+
+.main-row {
+    max-width: 140rem;
+    height: auto;
+    padding: 2rem;
+    margin: auto;
+    display: flex;
+    gap: 5rem;
+}
+
+.graph-content{
+    width: 100rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/*========= CARD ======== */
+
+.dashboard-card {
+    background-color: #Fff;
+    border-radius: 1rem;
+    margin-top: 6rem;
+    height: 40%;
+    padding: 3.5rem 1rem;
+    box-shadow: 0rem 0rem 1.6rem 0.1rem rgba(128,128,128,0.23);
+
+}
+.dropdown {
+    width: 24rem;
+}
+
+/*========= GRAFICOS ======== */
+.graph-second,
+.graph-principal{
+    margin: 0.5rem;
+    background-color: #FFF;
+    box-shadow: 0rem 0rem 1.6rem 0.1rem rgba(128,128,128,0.23);
+    margin-bottom: 5rem;
+}
+
+.graph-content H2 {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+}
