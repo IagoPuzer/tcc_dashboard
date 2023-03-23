@@ -13,6 +13,7 @@
 body {
     background-color: #F2F3F8;
     font-family:Poppins;
+
 }
 
 /*========= MAIN ======== */
@@ -35,7 +36,7 @@ body {
 /*========= MAIN SECTION ======== */
 
 .main-row {
-    max-width: 140rem;
+    max-width: 165rem;
     height: auto;
     padding: 2rem;
     margin: auto;
@@ -44,7 +45,7 @@ body {
 }
 
 .graph-content{
-    width: 100rem;
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -52,6 +53,7 @@ body {
 /*========= CARD ======== */
 
 .dashboard-card {
+    width: 40%;
     background-color: #Fff;
     border-radius: 1rem;
     margin-top: 6rem;
@@ -60,8 +62,18 @@ body {
     box-shadow: 0rem 0rem 1.6rem 0.1rem rgba(128,128,128,0.23);
 
 }
+
+.dashboard-card Img {
+    width: 80%;
+    margin: 0 0 50px 40px;
+}
+
+.dashboard-card H3 {
+    font-size: 20px;
+}
+
 .dropdown {
-    width: 24rem;
+    max-width: 30rem;
 }
 
 /*========= GRAFICOS ======== */
@@ -70,7 +82,7 @@ body {
     margin: 0.5rem;
     background-color: #FFF;
     box-shadow: 0rem 0rem 1.6rem 0.1rem rgba(128,128,128,0.23);
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
 }
 
 .graph-content H2 {
@@ -78,3 +90,16 @@ body {
     justify-content: center;
     padding: 2rem;
 }
+
+.graph-second {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.graph-container{
+    width: 500px;
+    flex-wrap: wrap;
+}
+
