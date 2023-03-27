@@ -19,7 +19,7 @@ app = dash.Dash(
     ]
 )
 
-#fazendo a leitura dos dados e a construção do data frame
+# fazendo a leitura dos dados e a construção do data frame
 df = pd.read_csv("New_dataset.csv", usecols=['proc', 'date', 'vara', 'assunto', 'advogados'])
 
 df['date'] = pd.to_datetime(df['date'], format='%m/%d/%Y')
@@ -28,19 +28,18 @@ df['quantidade'] = 1
 varas = df['vara'].value_counts().index
 varas = natsorted(varas)
 df2 = df.copy()
-df3 = df2.copy()
-#criando o dataframe para fazer a leitura dos assuntos
+
+# criando o dataframe para fazer a leitura dos assuntos
 assuntos = df2['assunto'].value_counts().head(10)
 data_assuntos = pd.DataFrame(assuntos)
 data_assuntos = data_assuntos.reset_index()
-data_assuntos.columns=['assuntos','quantidade_assuntos']
+data_assuntos.columns = ['assuntos', 'quantidade_assuntos']
 
-#criando o dataframe para fazer a leitura dos advogados
+# criando o dataframe para fazer a leitura dos advogados
 advogados = df2['advogados'].value_counts().head(10)
 data_advogados = pd.DataFrame(advogados)
 data_advogados = data_advogados.reset_index()
-data_advogados.columns=['advogados','quantidade_advogados']
-
+data_advogados.columns = ['advogados', 'quantidade_advogados']
 
 df = df.resample('M', on='date').sum()
 
@@ -49,14 +48,12 @@ df['media'] = df['quantidade'].rolling(2).mean()
 df['max'] = round(df['media'] + (df['media'] * 0.10))
 df['min'] = round(df['media'] - (df['media'] * 0.10))
 
-#criando as opções para se usar no dropdown de varas
+# criando as opções para se usar no dropdown de varas
 opcoes = list(df2['vara'].unique())
-opcoes.append('Todas as varas')
+opcoes.append('Toda seção')
 
-#criando as opcoes para o dropdown dos assuntos
-opcoes_assunto = list(df2['assunto'].unique())
 
-#inicio da aplicação do dashboard
+# inicio da aplicação do dashboard
 app.layout = html.Div(children=[
     html.Div(
         className='main',
@@ -76,29 +73,29 @@ app.layout = html.Div(children=[
                         children=[
                             html.Img(src="assets/images/logo-jfrn.svg"),
                             html.H3(children='Selecione a vara'),
-                            dcc.Dropdown(opcoes, value='Todas as varas', id='varas',
+                            dcc.Dropdown(opcoes, value='Toda seção', id='varas',
                                          className='dropdown'),
                         ],
                     ),
                     html.Div(
                         className='graph-content',
                         children=[
-                                html.Div(
-                                    className='graph-principal',
-                                    children=[
-                                        dcc.Graph(
-                                            id='grafico_quantidade_proc',
-                                        ),
-                                    ]
-                                ),
+                            html.Div(
+                                className='graph-principal',
+                                children=[
+                                    dcc.Graph(
+                                        id='grafico_quantidade_proc',
+                                    ),
+                                ]
+                            ),
                             html.Div(
                                 className='graph-second',
                                 children=[
                                     html.Div(
                                         className='graph-container',
                                         children=[
-                                        dcc.Graph(
-                                        id='grafico_quantidade_assuntos',
+                                            dcc.Graph(
+                                                id='grafico_quantidade_assuntos',
 
                                             ),
                                         ]
@@ -116,17 +113,14 @@ app.layout = html.Div(children=[
                             ),
                             html.Div(
                                 className='container-table',
-                                children = [
-                                    html.Div(
-                                    children = [
-                                        html.H3(children='selecione o assunto '),
-                                        dcc.Dropdown(opcoes_assunto, id='assuntos',
-                                                     className='dropdown'),
-                                        ]
+                                children=[
+                                    html.H2(
+                                        className='title-cotainer-table',
+                                        children=['Detalhamento de processos por vara']
                                     ),
                                     html.Div(
                                         className='table',
-                                        id = 'table'
+                                        id='table'
                                     )
                                 ]
                             ),
@@ -140,22 +134,23 @@ app.layout = html.Div(children=[
 
 @app.callback(
     [
-    Output('grafico_quantidade_proc', 'figure'),
-    Output('grafico_quantidade_assuntos', 'figure'),
-    Output('grafico_quantidade_adv', 'figure'),
+        Output('grafico_quantidade_proc', 'figure'),
+        Output('grafico_quantidade_assuntos', 'figure'),
+        Output('grafico_quantidade_adv', 'figure'),
+        Output('table', 'children'),
     ],
     Input('varas', 'value')
 
 )
 def update_output(value):
     figSeries = go.Figure()
-    # quando o valor do dropdown for todas as varas trazer as informações
-    # de toda a seção
-    if value == 'Todas as varas':
+    # quando o valor do dropdown for toda a seção trazer as informações  de toda a seção
+    if value == 'Toda seção':
+        # Inserindo a média móvel no gráfico
         figSeries.add_trace(
             go.Scatter(
-                x = df.index,
-                y = df['max'],
+                x=df.index,
+                y=df['max'],
                 name='Intervalo Máximo',
                 fill=None,
                 showlegend=False,
@@ -181,8 +176,8 @@ def update_output(value):
         )
         figSeries.add_trace(
             go.Scatter(
-                x = df.index,
-                y = df['min'],
+                x=df.index,
+                y=df['min'],
                 name='Intervalo Mínimo',
                 fill='tonexty',
                 showlegend=False,
@@ -190,9 +185,9 @@ def update_output(value):
                     color='green',
                     width=1,
                     dash='dot'
+                )
             )
         )
-    )
         # criando o gráfico com o quantitativo de processos
         figSeries.add_trace(
             go.Scatter(
@@ -226,7 +221,7 @@ def update_output(value):
         )
         figSeries.update_layout(
             hovermode='x unified',
-            title_text='Relação do quantitativo de processos mensais',
+            title_text='Relação do quantitativo de processos mensais em toda a seção',
             title_x=0.5,
             xaxis_title='Meses',
             yaxis_title=None,
@@ -245,7 +240,7 @@ def update_output(value):
             yaxis_title=None,
             xaxis_title=None,
             legend_title_text='Assuntos',
-            title_text='Assuntos mais relevantes',
+            title_text='Assuntos mais relevantes em toda a seção',
             title_x=0.5,
             coloraxis_colorbar={
                 'title': ''
@@ -255,28 +250,38 @@ def update_output(value):
             yaxis_title=None,
             xaxis_title=None,
             legend_title_text='Advogados',
-            title_text='Advogados com mais processos na vara',
+            title_text='Advogados com mais processos em toda a seção',
             title_x=0.5,
             coloraxis_colorbar={
                 'title': ''
             }
         )
+        table_assunto = None
+
     else:
         # fazendo a separação do quantitativo de processos por vara
         tabela_filtrada = df2.loc[df2['vara'] == value, :]
         serie_filtrada = tabela_filtrada.copy()
         serie_filtrada['date'] = pd.to_datetime(serie_filtrada['date'], format='%m/%d/%Y')
         serie_filtrada['quantidade'] = 1
-        serie_filtrada = serie_filtrada.resample('M',on='date').sum()
+        serie_filtrada = serie_filtrada.resample('M', on='date').sum()
+
         # fazendo a contagem de assuntos por vara
         tabela_assuntos = tabela_filtrada['assunto'].value_counts()
+
         # fazendo a contagem de advogados por vara
         tabela_adv = tabela_filtrada['advogados'].value_counts()
+
         # Calculo da média móvel
         serie_filtrada['media'] = serie_filtrada['quantidade'].rolling(2).mean()
         serie_filtrada['max'] = round(serie_filtrada['media'] + (serie_filtrada['media'] * 0.10))
         serie_filtrada['min'] = round(serie_filtrada['media'] - (serie_filtrada['media'] * 0.10))
 
+        # Fazendo o tratamento dos dados para ser exibido da melhor forma na tabela
+        tabela_filtrada.drop(['quantidade'], axis=1, inplace=True)
+        tabela_filtrada.columns = ['Num. processo', 'Data protocolação', 'vara', 'Assunto', 'Advogados']
+
+        # Inserindo a média móvel no gráfico de acordo com a vara especifica
         figSeries.add_trace(
             go.Scatter(
                 x=serie_filtrada.index,
@@ -318,18 +323,19 @@ def update_output(value):
                 )
             )
         ),
-
+        # criando o gráfico com o quantitativo de processos para a vara selecionada
         figSeries.add_trace(
-           go.Scatter(
+            go.Scatter(
                 x=serie_filtrada.index,
                 y=serie_filtrada['quantidade'],
-               name='Gráfico do quantitativo de processos',
+                name='Gráfico do quantitativo de processos',
                 line=dict(
                     color='tomato',
                     width=1,
                 )
             )
         )
+        # criando o gráfico com os assuntos mais relevantes para a vara selecionada
         figAssuntos = px.bar(
             tabela_assuntos,
             y=tabela_assuntos.index,
@@ -337,6 +343,7 @@ def update_output(value):
             color=tabela_assuntos.values,
             color_continuous_scale="GnBu",
         )
+        # criando o gráfico com os advogados que mais protocoloram processos para a vara selecionada
         figAdv = px.bar(
             tabela_adv,
             y=tabela_adv.index,
@@ -344,9 +351,20 @@ def update_output(value):
             color=tabela_adv.values,
             color_continuous_scale="GnBu",
         )
+        # Criando a tabela com o detalhamento dos processos para a vara selecionada
+        table_assunto = dash_table.DataTable(
+            id='table',
+            data=tabela_filtrada.to_dict('records'),
+            fixed_rows={'headers': True, 'data': 0},
+            style_table={'minWidth': '100%'},
+            style_header={'textAlign': 'center', 'fontWeight': 'bold'},
+            style_cell={'textAlign': 'center'},
+            columns=[{'id': x, 'name': x} for x in tabela_filtrada.columns],
+            page_size=10
+        )
         figSeries.update_layout(
             hovermode='x unified',
-            title_text='Relação do quantitativo de processos mensais',
+            title_text='Relação do quantitativo de processos mensais na vara',
             title_x=0.5,
             xaxis_title='Meses',
             yaxis_title=None,
@@ -365,7 +383,7 @@ def update_output(value):
             yaxis_title=None,
             xaxis_title=None,
             legend_title_text='Assuntos',
-            title_text='Assuntos mais relevantes',
+            title_text='Assuntos mais relevantes na vara',
             title_x=0.5,
             coloraxis_colorbar={
                 'title': ''
@@ -381,37 +399,8 @@ def update_output(value):
                 'title': ''
             }
         )
-    return figSeries, figAssuntos, figAdv
 
-# criando a tabela para detalhar os assuntos e advogados
-@app.callback(
-    Output('table', 'children'),
-    Input('assuntos', 'value')
-
-)
-
-def table_layout(value):
-    tabela_filtrada2 = pd.DataFrame()
-    if (value is not None):
-        # fazendo a separação do quantitativo de processos por vara
-        tabela_filtrada2 = df3.loc[df3['assunto'] == value, :]
-        tabela_filtrada2.drop(['date', 'quantidade'], axis=1, inplace=True)
-        tabela_filtrada2.columns = ['Num. processo', 'Vara', 'Assunto', 'Advogados']
-
-        print(tabela_filtrada2)
-
-        table_assunto = dash_table.DataTable(
-            id='table',
-            data=tabela_filtrada2.to_dict('records'),
-            fixed_rows={'headers': True, 'data': 0},
-            style_table={'minWidth': '100%'},
-            style_header={'textAlign': 'center', 'fontWeight': 'bold'},
-            style_cell={'textAlign': 'center'},
-            columns=[{'id': x, 'name': x} for x in tabela_filtrada2.columns],
-            page_size=10
-        )
-
-        return table_assunto
+    return figSeries, figAssuntos, figAdv, table_assunto
 
 
 if __name__ == '__main__':
